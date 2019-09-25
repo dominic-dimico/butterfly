@@ -6,6 +6,45 @@ from httplib2 import Http
 
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 
+
+def correct_sleep():
+
+    return True;
+
+
+def busy():
+
+    store = file.Storage('/home/dominic/.credentials/token.json')
+    creds = store.get()
+    if not creds or creds.invalid:
+             flow = client.flow_from_clientsecrets('/home/dominic/.credentials/credentials.json', SCOPES)
+             creds = tools.run_flow(flow, store)
+    service = build('calendar', 'v3', http=creds.authorize(Http()))
+    current_time = toolbelt.converters.datedt("now");
+    current_time = toolbelt.converters.datestr(current_time);
+    page_token = None
+    while True:
+      events = service.events().list(calendarId='primary', pageToken=page_token).execute()
+      for event in events['items']:
+        if 'start' in event: 
+           if 'dateTime' in event['start']:
+              start = event['start']['dateTime'] 
+           else: continue;
+        else: continue;
+        if 'end' in event: 
+           if 'dateTime' in event['end']:
+              end = event['end']['dateTime']
+           else: continue;
+        else: continue;
+        if current_time > start and current_time < end:
+           return True;
+      page_token = events.get('nextPageToken')
+      if not page_token:
+        break
+    return False;
+
+
+
 def schedule_client(when,duration,service,email):
 
      where = "2790 Saint Johns Ave Apt A1, Jacksonville FL, 32205"
