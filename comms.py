@@ -6,16 +6,17 @@ import parsedatetime
 import smtplib
 import configparser
 import code
+import random
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 
-from googlevoice import Voice
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEBase import MIMEBase
-from email.MIMEText import MIMEText
-from email import Encoders
+#from googlevoice import Voice
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email.mime.text import MIMEText
+from email import encoders
 
 
 ed  = os.environ.get('EDITOR', 'vim')
@@ -29,6 +30,12 @@ class Comms():
         self.config = configparser.ConfigParser();
         self.config.read('/home/dominic/src/butterfly/butterfly.cfg');
 
+
+    def random_type(self, obj, string):
+        u = random.randint(100, 300)
+        for i in range(len(string)):
+            time.sleep(u/3000.)
+            obj.send_keys(string[i]);
 
 
     def email(self, address, subject, body, attach):
@@ -62,11 +69,12 @@ class Comms():
 
 
     def text_login(self):
-        voice = Voice();
-        voice.login(
-                    self.config['text']['username'], 
-                    self.config['text']['password']
-        );
+        #voice = Voice();
+        voice = None
+        #voice.login(
+        #            self.config['text']['username'], 
+        #            self.config['text']['password']
+        #);
         return voice;
 
 
@@ -80,7 +88,11 @@ class Comms():
     def voice_login(self):
 
         chrome_options = webdriver.ChromeOptions()
-        #chrome_options.add_argument("headless");
+        #chrome_options.add_argument("--user-data-dir=/home/dominic/.config/google-chrome/");
+        chrome_options.add_argument("--profile-directory=Default");
+        chrome_options.add_argument("--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36");
+        chrome_options.add_argument("--disable-web-security");
+        chrome_options.add_argument("--allow-running-insecure-content");
         prefs = {"profile.default_content_setting_values.notifications" : 2}
         chrome_options.add_experimental_option("prefs",prefs)
         driver = webdriver.Chrome(chrome_options=chrome_options, executable_path='/usr/lib/chromium-browser/chromedriver');
@@ -90,7 +102,8 @@ class Comms():
         loginbutton.click();
 
         username = driver.find_element_by_id("identifierId");
-        username.send_keys("dominic.dimico@gmail.com");
+        self.random_type(username, "dominic.dimico@gmail.com");
+        #username.send_keys("dominic.dimico@gmail.com");
         username.send_keys(Keys.ENTER);
         time.sleep(3);
 
@@ -115,8 +128,6 @@ class Comms():
 
         self.driver = driver;
         return driver;
-
-        
 
 
 

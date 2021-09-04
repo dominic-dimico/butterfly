@@ -1,1 +1,2 @@
-from comms import *
+from .comms import *
+from .scheduler import *
