@@ -1,8 +1,4 @@
-#!/usr/bin/python
-
-# Usage example:
-# python comments.py --videoid='<video_id>' --text='<text>'
-
+##!/usr/bin/python
 
 import httplib
 import random
