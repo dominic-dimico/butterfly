@@ -12,7 +12,7 @@ class SkypeAgent():
   def __init__(self):
     configs = {};
     configs = configparser.ConfigParser()
-    configs.read('/home/dominic/src/butterfly/skype.cfg')
+    configs.read('/home/dominic/.config/butterfly/skype.cfg')
     config = configs['main']
     username = config['username']
     password = config['password']
