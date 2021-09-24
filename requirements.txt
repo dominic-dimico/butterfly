@@ -1,4 +1,0 @@
-
-img2unicode==0.1a8
-googleapis-common-protos==1.53.0
-goslate==1.5.1
