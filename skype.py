@@ -1,27 +1,36 @@
 from skpy import Skype, SkypeTypingEvent
 from getpass import getpass
 import smartlog;
-
+import configparser
 
 
 class SkypeAgent():
-
 
   log = smartlog.Smartlog()
 
 
   def __init__(self):
+    configs = {};
+    configs = configparser.ConfigParser()
+    configs.read('/home/dominic/src/butterfly/skype.cfg')
+    config = configs['main']
+    username = config['username']
+    password = config['password']
+    self.sk = Skype(username, password);
+
+
+  def login(self)
     self.sk = None;
     while not self.sk:
         x = self.log.gather({
-            'keys' : ['login'],
-            'data' : { 
+            'keys'   : ['login'],
+            'method' : 'linear',
+            'data'   : { 
               'login' : 'the.dominicator@gmail.com',
             },
             'overwrite' : True,
         });
         self.sk = Skype(x['data']['login'], getpass());
-        self.log.print((x, self.sk));
 
 
   def print_messages(self, args):

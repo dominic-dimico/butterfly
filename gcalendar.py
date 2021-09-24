@@ -18,12 +18,17 @@ class GoogleCalendarAgent():
         self.authenticate();
 
 
-    def authenticate(self):
-        self.store = file.Storage('/home/dominic/.credentials/gcalendar/token.json')
-        self.creds = self.store.get()
+    def authenticate(self, credpath="/home/dominic/.credentials/gcalendar/"):
+        self.store = file.Storage(credpath+'token.json');
+        self.creds = self.store.get();
         if not self.creds or self.creds.invalid:
-           self.flow = client.flow_from_clientsecrets('/home/dominic/.credentials/gcalendar/credentials.json', SCOPES)
-           self.creds = tools.run_flow(self.flow, self.store)
+           if creds and creds.expired and creds.refresh_token:
+              creds.refresh(Request());
+           else:
+               self.flow = client.flow_from_clientsecrets(credpath+'credentials.json', SCOPES);
+               self.creds = tools.run_flow(self.flow, self.store);
+           with open(credpath+'token.json', 'w') as token:
+               token.write(creds.to_json());
         self.calendar = build('calendar', 'v3', http=self.creds.authorize(Http()))
 
 
@@ -133,8 +138,6 @@ class GoogleCalendarAgent():
 
          service  = args['service'];
 
-         if not 'where' in args:
-            args['where'] = "1826 Bayard Pl, Apt 12, Jacksonville, FL 32205"
 
          description = "";
          if service == "workout":
@@ -156,10 +159,16 @@ class GoogleCalendarAgent():
            title = "Hypnosis Session"
            color = 9;
            description += ""
+           if not 'where' in args:
+              args['where'] = "Skype"
 
          else:
            color = 5;
            title = service;
+
+
+         if not 'where' in args:
+            args['where'] = "1826 Bayard Pl, Apt 12, Jacksonville, FL 32205"
 
          if 'who' in args and args['who']:
             title += " - %s" % args['who'];
@@ -167,16 +176,16 @@ class GoogleCalendarAgent():
          postdescription = "\n";
 
          if 'email' in args and args['email']:
-            description     += "\nE-mail: <%s>" % args['email'];
-            postdescription += "\nE-mail: <the.dominicator@gmail.com>"
+            description     += "\n\nYour E-mail: <%s>" % args['email'];
+            postdescription += "\nMy E-mail: <the.dominicator@gmail.com>"
 
          if 'phone' in args and args['phone']:
-            description     += "\nPhone: (%s)"  % args['phone'];
-            postdescription += "\nPhone: (%s)"  % "904-748-9785";
+            description     += "\nYour Phone: (%s)"  % args['phone'];
+            postdescription += "\nMy Phone: (%s)"  % "904-748-9785";
 
          if 'skype' in args and args['skype']:
-            description     += "\nSkype: %s"  % args['skype'];
-            postdescription += "\nSkype: %s"  % "live:the.dominicator";
+            description     += "\nYour Skype: %s"  % args['skype'];
+            postdescription += "\nMy Skype: %s"  % "live:the.dominicator";
 
          args['title'] = title;
          args['color'] = color;
