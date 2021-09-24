@@ -1,4 +1,12 @@
+<<<<<<< HEAD
 ##!/usr/bin/python
+=======
+#!/usr/bin/python
+
+# Usage example:
+# python comments.py --videoid='<video_id>' --text='<text>'
+
+>>>>>>> 98f41506cbcd03a8dfe9c2c5775a3905a0fa492f
 
 import httplib
 import random
