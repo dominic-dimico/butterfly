@@ -136,6 +136,10 @@ class GoogleCalendarAgent():
     #   - where
     def prepare_client_event(self,args):
 
+         args = self.log.argcheck(args, {
+            'service'     : {'gather': 'maybe'},
+         });
+
          service  = args['service'];
 
 
@@ -154,6 +158,13 @@ class GoogleCalendarAgent():
            title = "Massage Session"
            color = 11;
            description += "For massage, please be sure to shower beforehand. I have a shower available.  Cash is preferred."
+
+         elif service == "hypnochat":
+           title = "Chat"
+           color = 9;
+           description += ""
+           if not 'where' in args:
+              args['where'] = "Skype"
 
          elif service == "hypnosis":
            title = "Hypnosis Session"
@@ -197,12 +208,21 @@ class GoogleCalendarAgent():
 
 
     def prepare_event(self, args): 
+    
+         args = self.log.argcheck(args, {
+            'when'        : {'gather': 'maybe'},
+            'where'       : {'gather': 'maybe'},
+            'email'       : {'gather': 'maybe'},
+            'title'       : {'gather': 'maybe'},
+            'color'       : {'gather': 'maybe'},
+            'description' : {'gather': 'maybe'},
+         });
 
-         when     = args['when'];
-         where    = args['where'];
-         email    = args['email'];
-         title    = args['title'];
-         color    = args['color'];
+         when        = args['when'];
+         where       = args['where'];
+         email       = args['email'];
+         title       = args['title'];
+         color       = args['color'];
          description = args['description'];
          
          if 'start' in args:

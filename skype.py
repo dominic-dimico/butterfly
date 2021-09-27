@@ -19,7 +19,7 @@ class SkypeAgent():
     self.sk = Skype(username, password);
 
 
-  def login(self)
+  def login(self):
     self.sk = None;
     while not self.sk:
         x = self.log.gather({
@@ -31,6 +31,22 @@ class SkypeAgent():
             'overwrite' : True,
         });
         self.sk = Skype(x['data']['login'], getpass());
+
+
+  def messages_since(self, when='yesterday'):
+      msgs = [];
+      from toolbelt.quickdate import quickdate
+      for c in self.sk.contacts:
+           try:
+             ch  = c.chat.__dict__['raw'];
+             lmt = ch['lastMessage']['originalarrivaltime'];
+             if lmt > quickdate(when, 'iso'):
+                msgs += [ch['lastMessage']];
+           except Exception as e: 
+             print(e);
+             if e.message == 'originalarrivaltime':
+                print(ch['lastMessage']);
+      return msgs;
 
 
   def print_messages(self, args):
@@ -56,7 +72,7 @@ class SkypeAgent():
          ch.sendFile(open(args['file'], "rb"), args['file']);
 
 
-  def list_contacts(self):
+  def print_contacts(self):
       import pprint
       d = {}
       for c in self.sk.contacts:
@@ -65,8 +81,9 @@ class SkypeAgent():
           if c.name:
              if c.name.first: name += c.name.first + " ";
              if c.name.last:  name += c.name.last;
-          d[c.id] = name;
+          d[c.id] = c;
       self.log.logdata({'data': d});
+      return d;
 
 
   def auto_reply(self, args={
