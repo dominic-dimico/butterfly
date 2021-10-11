@@ -18,11 +18,11 @@ from google.auth.transport.requests import Request
 class GMailAgent():
 
 
-    def __init__(self, credpath='/home/dominic/.credentials/gmail/'):
+    def __init__(self, credpath=os.path.expanduser('~')+'/.credentials/gmail/'):
         self.authenticate(credpath);
 
 
-    def authenticate(self, credpath='/home/dominic/.credentials/gmail/'):
+    def authenticate(self, credpath=os.path.expanduser('~')+'/.credentials/gmail/'):
       self.scopes = ['https://mail.google.com/']
       creds = None;
       if os.path.exists(credpath+'token.json'):

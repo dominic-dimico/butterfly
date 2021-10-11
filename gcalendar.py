@@ -1,4 +1,5 @@
 import toolbelt;
+import os;
 import smartlog;
 from googleapiclient.discovery import build
 from oauth2client import file, client, tools
@@ -18,7 +19,7 @@ class GoogleCalendarAgent():
         self.authenticate();
 
 
-    def authenticate(self, credpath="/home/dominic/.credentials/gcalendar/"):
+    def authenticate(self, credpath=os.path.expanduser('~')+"/.credentials/gcalendar/"):
         self.store = file.Storage(credpath+'token.json');
         self.creds = self.store.get();
         if not self.creds or self.creds.invalid:

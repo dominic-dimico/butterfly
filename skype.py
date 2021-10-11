@@ -1,5 +1,6 @@
 from skpy import Skype, SkypeTypingEvent
 from getpass import getpass
+import os;
 import smartlog;
 import configparser
 
@@ -12,7 +13,7 @@ class SkypeAgent():
   def __init__(self):
     configs = {};
     configs = configparser.ConfigParser()
-    configs.read('/home/dominic/.config/butterfly/skype.cfg')
+    configs.read(os.path.expanduser('~')+'/.config/butterfly/skype.cfg')
     config = configs['main']
     username = config['username']
     password = config['password']
